@@ -1,0 +1,29 @@
+.typing-game {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 400px;
+  margin: 0 auto;
+}
+
+.typing-game h2 {
+  margin-bottom: 10px;
+}
+
+.typing-game .target-text {
+  font-family: monospace;
+  margin-bottom: 10px;
+}
+
+.typing-game textarea {
+  width: 100%;
+  padding: 10px;
+  font-family: monospace;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.typing-game .stats {
+  margin-top: 10px;
+}
