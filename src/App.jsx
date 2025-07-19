@@ -149,13 +149,13 @@ function App() {
     {
       id: 'youtube',
       title: 'YouTube',
-      icon: '/public/icons/youtube.png',
+      icon: '/icons/youtube.png',
       onClick: () => handleRedirect('https://www.youtube.com')
     },
     {
       id: 'google',
       title: 'Google Chrome',
-      icon: '/public/icons/google.png',
+      icon: '/icons/google.png',
       onClick: () => handleRedirect('https://www.google.com')
     },
     { 
