@@ -168,12 +168,25 @@ function App() {
           <p className="mb-2">Here are some of my documents:</p>
           <div className="flex space-x-4">
             <a href="#" onClick={() => handleIconClick({ id: 'resume', title: 'Resume', icon: '/icons/Resume-icon.png', content: <Resume /> })} className="text-blue-500 underline">
-              <img src="/icons/Resume-icon.png" alt="Resume" className="w-8 h-8" />
+              <img src="/icons/resume icon.png" alt="Resume" className="w-8 h-8" />
               Resume.pdf
             </a>
            
-            <a href="#" onClick={() => handleIconClick({ id: 'videos', title: 'Videos', icon: '/icons/Video-icon.png', content: <Videos /> })} className="text-blue-500 underline">
-              <img src="/icons/Video-icon.png" alt="Videos" className="w-8 h-8" />
+            <a href="#" onClick={(e) => {
+              e.preventDefault();
+              handleIconClick({ 
+                id: 'videos', 
+                title: 'Videos', 
+                icon: '/icons/Video-icon.png', 
+                content: <Videos />,
+                width: 900,
+                height: 700
+              });
+            }} className="text-blue-500 underline flex flex-col items-center">
+              <img src="/icons/Video-icon.png" alt="Videos" className="w-8 h-8" onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'https://win98icons.alexmeub.com/icons/png/msn_media_video-0.png';
+              }} />
               Videos
             </a>
           </div>
@@ -213,8 +226,14 @@ function App() {
     {
       id: 'skills',
       title: 'Skills',
-      icon: '/icons/Skills-icon.png', // Make sure you have an icon, or use any existing one
+      icon: '/icons/Skills-icon.png',
       content: <Skills />
+    },
+    {
+      id: 'resume',
+      title: 'My Resume',
+      icon: '/icons/resume%20icon.png',  // URL-encoded space
+      content: <Resume />
     }
   ];
 
@@ -328,7 +347,7 @@ function App() {
           {/* RandomFactButton directly under Dark Mode button */}
           <RandomFactButton style={{ position: "absolute", top: "60px", right: "32px", zIndex: 2000 }} />
 
-          {/* Display only the first 4 icons on the desktop */}
+          {/* Display all system icons on the desktop */}
           <div className="flex flex-col items-start">
             {systemIcons.map(icon => (
               <Draggable
