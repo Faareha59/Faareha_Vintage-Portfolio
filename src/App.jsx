@@ -301,7 +301,7 @@ function App() {
     {
       id: 'typing_game',
       title: 'Typing Game',
-      icon: '/public/icons/Typing.png',
+      icon: '/icons/Typing.png',
       content: <TypingGame />
     },
     {
