@@ -30,7 +30,7 @@ const Taskbar = ({ onStartClick, openWindows, activeWindow, onWindowClick }) => 
         type="button"
       >
         <span className="start-button-glow" aria-hidden="true" />
-        <img src="./icons/Windows-icon xp.png" alt="Windows logo" className="start-button-logo" />
+        <img src="/icons/Windows-icon xp.png" alt="Windows logo" className="start-button-logo" />
         <span className="start-button-text">Start</span>
       </button>
 

@@ -8,7 +8,7 @@ function LoginScreen({ onLogin }) {
         <div className="login-panel">
           <div className="panel-left">
             <img
-              src="./icons/Windows-icon xp.png"
+              src="/icons/Windows-icon xp.png"
               alt="Windows XP logo"
               className="xp-logo-img"
               onError={(e) => {
@@ -24,7 +24,7 @@ function LoginScreen({ onLogin }) {
             <button className="user-tile" onClick={() => onLogin({ username: 'Faareha' })}>
               <div className="user-tile-frame">
                 <img
-                  src="./public/icons/Windows-Messenger-icon.png"
+                  src="/icons/Windows-Messenger-icon.png"
                   alt="Faareha"
                   className="user-tile-avatar"
                   onError={(e) => {
