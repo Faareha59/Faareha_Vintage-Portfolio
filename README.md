@@ -3,7 +3,7 @@
 A nostalgic portfolio website inspired by the classic Windows XP operating system interface, built with React and modern web technologies.
 
 
-<img width="1362" height="646" alt="image" src="<img width="1357" height="640" alt="Screenshot (532)" src="https://github.com/user-attachments/assets/b7a7cefe-6406-4373-b007-6e9ff9c4f5bc" />
+<img width="1357" height="640" alt="Screenshot (532)" src="https://github.com/user-attachments/assets/b7a7cefe-6406-4373-b007-6e9ff9c4f5bc" />
 
 ## Features
 - 🖥️ Windows XP-inspired UI with draggable and resizable windows
