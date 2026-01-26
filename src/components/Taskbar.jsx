@@ -1,34 +1,63 @@
-import React from 'react';
-import './Taskbar.css'; // Import the CSS for styling
+import React, { useEffect, useMemo, useState } from 'react';
+import './Taskbar.css';
 
 const Taskbar = ({ onStartClick, openWindows, activeWindow, onWindowClick }) => {
+  const [now, setNow] = useState(() => new Date());
+  const [isConnected, setIsConnected] = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formattedTime = useMemo(
+    () => now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    [now]
+  );
+
+  const formattedDate = useMemo(
+    () => now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+    [now]
+  );
+
+  const networkLabel = isConnected ? 'Connected - Local Area Connection' : 'Network cable unplugged';
+
   return (
-    <div className="taskbar fixed bottom-0 left-0 w-full h-10 flex items-center px-2 z-50 bg-gray-800 text-white">
+    <div className="taskbar" role="navigation" aria-label="Taskbar">
       <button 
-        className="start-button mr-2 flex items-center"
+        className="start-button"
         onClick={onStartClick}
+        type="button"
       >
-        <img src="/icons/windows-xp-start-icon.png" alt="Start" className="w-5 h-5 mr-2" />
-        Start
+        <span className="start-button-glow" aria-hidden="true" />
+        <img src="./icons/Windows-icon xp.png" alt="Windows logo" className="start-button-logo" />
+        <span className="start-button-text">Start</span>
       </button>
-  
-      
-      <div className="flex-1 flex">
-        {openWindows.map(window => (
+
+      <div className="task-buttons" role="list">
+        {openWindows.map((window) => (
           <button 
             key={window.id}
-            className={`px-3 py-1 mx-1 border-2 flex items-center ${activeWindow === window.id ? 'border-inset bg-gray-300' : 'border-outset'}`}
+            className={`task-button ${activeWindow === window.id ? 'task-button--active' : ''}`}
             onClick={() => onWindowClick(window.id)}
+            type="button"
           >
-            <img src={window.icon} alt={window.title} className="w-4 h-4 mr-2" />
-            <span className="truncate max-w-[100px]">{window.title}</span>
+            {window.icon && <img src={window.icon} alt="" aria-hidden="true" />}
+            <span>{window.title}</span>
           </button>
         ))}
       </div>
-      
-      <div className="flex items-center px-2 border-2 border-outset">
-        <span className="mr-4">No Internet</span>
-        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+
+      <div className="system-tray" aria-label="System tray">
+        <button
+          type="button"
+          className={`tray-icon tray-icon--network ${isConnected ? 'connected' : 'disconnected'}`}
+          onClick={() => setIsConnected((prev) => !prev)}
+        />
+        <span className="tray-clock" title={now.toLocaleString()}>
+          <div>{formattedTime}</div>
+          <div>{formattedDate}</div>
+        </span>
       </div>
     </div>
   );

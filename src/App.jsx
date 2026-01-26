@@ -1,42 +1,43 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
 import DesktopIcon from './components/DesktopIcon';
-
-import Draggable from 'react-draggable'; // <-- Add this import
-
 import Window from './components/Window';
+import Draggable from 'react-draggable';
 import Taskbar from './components/Taskbar';
 import StartMenu from './components/StartMenu';
-import TypingGame from './components/TypingGame'; // Import TypingGame component
-import Calculator from './components/Calculator'; // Import Calculator component
+import TypingGame from './components/TypingGame';
+import Calculator from './components/Calculator';
 import Videos from './components/Videos';
-import Resume from './components/Resume'; // Import Resume component
-import Certificates from './components/Certificates'; // Import Certificates component
-import RandomFactButton from './components/RandomFactButton'; // Import RandomFactButton component
+import Resume from './components/Resume';
+import RandomFactButton from './components/RandomFactButton';
 import ErrorPopup from "./components/ErrorPopup";
-import Guestbook from './components/Guestbook';
 import ClippyChatBot from "./components/ClippyChatBot";
-import Skills from './components/Skills'; // <-- Add this import at the top
-import './App.css'; // Ensure the CSS file is imported
+import Skills from './components/Skills';
+import LoginScreen from './components/LoginScreen';
+import './App.css';
 
 function App() {
   const [openWindows, setOpenWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState(null);
   const [showStartMenu, setShowStartMenu] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [dragged, setDragged] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
+  const shutdownAudioUrl = 'https://archive.org/download/windows-xp-system-sounds/WINDOWS%20XP%20SHUTDOWN.wav';
+  const startupAudioUrl = 'https://archive.org/download/windows-xp-system-sounds/WINDOWS%20XP%20STARTUP.wav';
+  const clickAudioUrl = 'https://archive.org/download/windows-xp-system-sounds/WINDOWS%20XP%20DING.wav';
+  const startMenuAudioUrl = 'https://archive.org/download/windows-xp-system-sounds/WINDOWS%20XP%20START.wav';
+
+  const playSound = (url, volume = 0.7) => {
+    try {
+      const audio = new Audio(url);
+      audio.volume = volume;
+      audio.play().catch(() => {});
+    } catch (error) {
+      // no-op
     }
-  }, [isDarkMode]);
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
   };
 
   const handleRedirect = (url) => {
@@ -46,6 +47,7 @@ function App() {
 
   const handleIconClick = (icon) => {
     if (!dragged) {
+      playSound(clickAudioUrl, 0.5);
       if (icon.onClick) {
         icon.onClick();
       } else {
@@ -70,12 +72,37 @@ function App() {
   };
 
   const toggleStartMenu = () => {
+    playSound(startMenuAudioUrl, 0.6);
     setShowStartMenu(!showStartMenu);
   };
 
   const handleStartMenuItemClick = (icon) => {
     handleIconClick(icon);
     setShowStartMenu(false);
+  };
+
+  const handleShutdown = () => {
+    setShowStartMenu(false);
+
+    const finalize = () => {
+      setOpenWindows([]);
+      setActiveWindow(null);
+      setIsLoggedIn(false);
+    };
+
+    try {
+      const audio = new Audio(shutdownAudioUrl);
+      audio.volume = 0.8;
+      audio.play()
+        .then(() => {
+          audio.addEventListener('ended', finalize, { once: true });
+        })
+        .catch(() => finalize());
+
+      setTimeout(finalize, 6000);
+    } catch (error) {
+      finalize();
+    }
   };
 
   const triggerError = () => {
@@ -90,50 +117,87 @@ function App() {
     setShowError(true);
   };
 
+  const handleLogin = () => {
+    playSound(startupAudioUrl, 0.7);
+    setIsLoggedIn(true);
+  };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="app-container">
+        <LoginScreen onLogin={handleLogin} />
+      </div>
+    );
+  }
+
   const systemIcons = [
-        // ...existing code...
-    { 
-      id: 'about', 
-      title: 'About Me', 
+    {
+      id: 'about',
+      title: 'About Me',
       icon: '/icons/About-me-icon.png',
       content: (
         <div className="p-4">
           <h2 className="text-xl font-bold mb-4">About Me</h2>
           <div>
-            <p className="mb-2">I'm a 7-Semester Computer Science student at Riphah International University.</p>
-            
+            <p className="mb-2">I'm a 8th Semester Computer Science student at Riphah International University.</p>
             <p>
               My latest projects include:
               <ul className="list-disc pl-5">
-                <li>Fruit Fusion App – a modern fruit  platform </li>
+                <li>Fruit Fusion App – a modern fruit platform</li>
                 <li>Prime Deals – an e-commerce web app</li>
                 <li>Student Mental Health AI – an AI-powered platform supporting student mental health</li>
                 <li>Windows XP-themed portfolio</li>
                 <li>Game Arena</li>
+                <li>Note-Taking App – built with DevOps practices</li>
               </ul>
             </p>
             <p>Always eager to learn and explore new technologies.</p>
           </div>
         </div>
       )
-    }, 
-    // ...existing code...
-    { 
-      id: 'my_computer', 
-      title: 'My Computer', 
+    },
+    {
+      id: 'my_computer',
+      title: 'My Computer',
       icon: '/icons/Computer-icon.png',
       content: (
         <div className="p-4">
-          <h2 className="text-xl font-bold mb-4">System Information</h2>
-          <p className="mb-2">Welcome to my portfolio computer!</p>
-          <p className="mb-2">This system is running on React and modern web technologies.</p>
-          <p>Feel free to explore and learn more about me and my work.</p>
+          <h2 className="text-xl font-bold mb-4">System Properties</h2>
+          
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-2 border-b pb-1">General</h3>
+            <div className="bg-gray-100 p-3 rounded">
+              <p className="mb-1"><strong>System:</strong> Microsoft Windows XP Professional</p>
+              <p className="mb-1"><strong>Registered to:</strong> Faareha Raza</p>
+              <p className="mb-1"><strong>Computer:</strong> FAAREHA-PC</p>
+              <p><strong>Processor:</strong> Intel(R) Core(TM) i7-8th Gen CPU @ 2.20GHz</p>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-2 border-b pb-1">Portfolio Information</h3>
+            <div className="bg-gray-100 p-3 rounded">
+              <p className="mb-1"><strong>Framework:</strong> React 18.2.0</p>
+              <p className="mb-1"><strong>Build Tool:</strong> Vite 4.5.0</p>
+              <p><strong>Status:</strong> <span className="text-green-600">✓ Running Optimally</span></p>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-2 border-b pb-1">Developer Environment</h3>
+            <div className="bg-gray-100 p-3 rounded">
+              <p className="mb-1"><strong>IDE:</strong> Visual Studio Code</p>
+              <p className="mb-1"><strong>Node.js:</strong> v18.17.0</p>
+              <p className="mb-1"><strong>Package Manager:</strong> npm 9.6.7</p>
+              <p><strong>Git:</strong> version 2.41.0</p>
+            </div>
+          </div>
         </div>
       )
     },
-    { 
-      id: 'network', 
-      title: 'My Network Places', 
+    {
+      id: 'network',
+      title: 'My Network Places',
       icon: '/icons/Internet-icon.png',
       content: (
         <div className="p-4">
@@ -158,7 +222,7 @@ function App() {
       icon: '/icons/google.png',
       onClick: () => handleRedirect('https://www.google.com')
     },
-    { 
+    {
       id: 'documents',
       title: 'My Documents',
       icon: '/icons/Documents-icon.png',
@@ -167,33 +231,49 @@ function App() {
           <h2 className="text-xl font-bold mb-4">My Documents</h2>
           <p className="mb-2">Here are some of my documents:</p>
           <div className="flex space-x-4">
-            <a href="#" onClick={() => handleIconClick({ id: 'resume', title: 'Resume', icon: '/icons/Resume-icon.png', content: <Resume /> })} className="text-blue-500 underline">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleIconClick({ id: 'resume', title: 'Resume', icon: '/icons/Resume-icon.png', content: <Resume /> });
+              }}
+              className="text-blue-500 underline"
+            >
               <img src="/icons/resume icon.png" alt="Resume" className="w-8 h-8" />
               Resume.pdf
             </a>
-           
-            <a href="#" onClick={(e) => {
-              e.preventDefault();
-              handleIconClick({ 
-                id: 'videos', 
-                title: 'Videos', 
-                icon: '/icons/Video-icon.png', 
-                content: <Videos />,
-                width: 900,
-                height: 700
-              });
-            }} className="text-blue-500 underline flex flex-col items-center">
-              <img src="/icons/Video-icon.png" alt="Videos" className="w-8 h-8" onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = 'https://win98icons.alexmeub.com/icons/png/msn_media_video-0.png';
-              }} />
+
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleIconClick({
+                  id: 'videos',
+                  title: 'Videos',
+                  icon: '/icons/Video-icon.png',
+                  content: <Videos />,
+                  width: 900,
+                  height: 700,
+                });
+              }}
+              className="text-blue-500 underline flex flex-col items-center"
+            >
+              <img
+                src="/icons/Video-icon.png"
+                alt="Videos"
+                className="w-8 h-8"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://win98icons.alexmeub.com/icons/png/msn_media_video-0.png';
+                }}
+              />
               Videos
             </a>
           </div>
         </div>
       )
     },
-    { 
+    {
       id: 'music',
       title: 'Music',
       icon: '/icons/Music-Library-icon.png',
@@ -203,25 +283,30 @@ function App() {
           <p className="mb-2">Some of my favorite music to code to:</p>
           <ul className="list-disc pl-5">
             <li>
-              <button onClick={() => {
-                const audio = document.getElementById('California Dreamin');
-                if (audio.paused) {
-                  audio.play();
-                } else {
-                  audio.pause();
-                }
-              }} className="text-blue-500 underline">California Dreamin</button>
+              <button
+                onClick={() => {
+                  const audio = document.getElementById('California Dreamin');
+                  if (audio.paused) {
+                    audio.play();
+                  } else {
+                    audio.pause();
+                  }
+                }}
+                className="text-blue-500 underline"
+              >
+                California Dreamin
+              </button>
               <audio id="California Dreamin" src="/music/The Mamas & The Papas - California Dreamin'.mp3"></audio>
             </li>
           </ul>
         </div>
       )
     },
-    { 
-      id: 'calculator', 
-      title: 'Calculator', 
+    {
+      id: 'calculator',
+      title: 'Calculator',
       icon: '/icons/Calculator-icon.png',
-      content: <Calculator /> // Ensure Calculator component is used here
+      content: <Calculator />
     },
     {
       id: 'skills',
@@ -232,10 +317,25 @@ function App() {
     {
       id: 'resume',
       title: 'My Resume',
-      icon: '/icons/resume%20icon.png',  // URL-encoded space
+      icon: '/icons/resume%20icon.png',
       content: <Resume />
+    },
+    {
+      id: 'user_account',
+      title: 'Faareha',
+      icon: '/icons/Windows-Messenger-icon.png',
+      content: (
+        <div className="p-4">
+          <h2 className="text-xl font-bold mb-4">Faareha's Profile</h2>
+          <p className="mb-2">Welcome to my profile!</p>
+          <p className="mb-2">I'm a 8th Semester Computer Science student at Riphah International University.</p>
+        </div>
+      )
     }
   ];
+
+  const desktopIconIds = ['about', 'my_computer', 'network', 'youtube', 'google', 'documents', 'user_account'];
+  const desktopIcons = systemIcons.filter((icon) => desktopIconIds.includes(icon.id));
 
   const portfolioIcons = [
     {
@@ -280,21 +380,21 @@ function App() {
             <p className="mt-2">Tech Stack: Python,AI</p>
             <a href="https://github.com/Faareha59/Game_Arena_OS" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
-           <div className="mb-4">
-          <h3 className="text-lg font-bold">8-Fruit Fusion</h3>
-            <p className="mt-2">Tech Stack: React Native,Expo Go,Firebase</p>
+          <div className="mb-4">
+            <h3 className="text-lg font-bold">8-Fruit Fusion</h3>
+            <p className="mt-2">Tech Stack: React Native, Expo Go, Firebase</p>
             <a href="https://github.com/Faareha59/Fruit-Fusion" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
           <div className="mb-4">
-          <h3 className="text-lg font-bold">9-Prime Deals</h3>
-            <p className="mt-2">Tech Stack: MongoDB,Express,React,Postman API,Tailwind CSS</p>
+            <h3 className="text-lg font-bold">10-Prime Deals</h3>
+            <p className="mt-2">Tech Stack: MongoDB, Express, React, Postman API, Tailwind CSS</p>
             <a href="https://github.com/Faareha59/Prime-Deals/tree/ProjectTemplate/PrimeDeals-App" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
-          
-
-
-
-
+          <div className="mb-4">
+            <h3 className="text-lg font-bold">11-Note-Taking App</h3>
+            <p className="mt-2">Tech Stack: DevOps, Modern Web Technologies</p>
+            <a href="#" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo (Coming Soon)</a>
+          </div>
         </div>
       )
     },
@@ -320,36 +420,19 @@ function App() {
           <p className="mb-2">
             GitHub: <a href="https://github.com/Faareha59" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">github.com/Faareha59</a>
           </p>
-          
         </div>
       )
-    },
-    // {
-    //   id: 'guestbook',
-    //   title: 'Guestbook',
-    //   icon: '/icons/Guestbook-icon.png',
-    //   content: <Guestbook />
-    // }
+    }
   ];
+
+  const startMenuIcons = [...systemIcons, ...portfolioIcons];
 
   return (
     <div className="app-container">
-      <div className={`relative h-full w-full overflow-hidden ${isDarkMode ? 'dark' : ''}`}>
-        <div className={`desktop h-full w-full p-4 overflow-hidden ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-blue-900 text-black'}`}>
-          {/* Theme Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            className="absolute top-4 right-4 px-4 py-2 bg-gray-300 dark:bg-gray-700 text-black dark:text-white rounded"
-          >
-            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
-
-          {/* RandomFactButton directly under Dark Mode button */}
-          <RandomFactButton style={{ position: "absolute", top: "60px", right: "32px", zIndex: 2000 }} />
-
-          {/* Display all system icons on the desktop */}
+      <div className="relative h-full w-full overflow-hidden">
+        <div className="desktop h-full w-full p-4 overflow-hidden">
           <div className="flex flex-col items-start">
-            {systemIcons.map(icon => (
+            {desktopIcons.map((icon) => (
               <Draggable
                 key={icon.id}
                 defaultPosition={{ x: 0, y: 0 }}
@@ -357,18 +440,15 @@ function App() {
                 onDrag={() => setDragged(true)}
                 onStop={() => setTimeout(() => setDragged(false), 100)}
               >
-                <div
-                  onClick={() => handleIconClick(icon)}
-                  style={{ cursor: "pointer" }}
-                >
+                <div onClick={() => handleIconClick(icon)} style={{ cursor: 'pointer' }}>
                   <DesktopIcon icon={icon} />
                 </div>
               </Draggable>
             ))}
           </div>
 
-          {openWindows.map(window => (
-            <Window 
+          {openWindows.map((window) => (
+            <Window
               key={window.id}
               window={window}
               isActive={activeWindow === window.id}
@@ -378,7 +458,7 @@ function App() {
           ))}
         </div>
 
-        <Taskbar 
+        <Taskbar
           onStartClick={toggleStartMenu}
           openWindows={openWindows}
           activeWindow={activeWindow}
@@ -386,45 +466,20 @@ function App() {
         />
 
         {showStartMenu && (
-          <StartMenu 
-            icons={[...systemIcons, ...portfolioIcons]} // Show all icons in the Start menu
+          <StartMenu
+            icons={startMenuIcons}
             onItemClick={handleStartMenuItemClick}
+            onShutdown={handleShutdown}
           />
         )}
-        
 
-        {/* Place RandomFactButton here so it floats above everything */}
-        <RandomFactButton style={{ position: "fixed", bottom: "40px", right: "32px", zIndex: 2000 }} />
-
-        <div style={{ position: "fixed", bottom: "120px", right: "32px", zIndex: 2100 }}>
+        <div style={{ position: 'fixed', bottom: '120px', right: '32px', zIndex: 2100 }}>
           <ClippyChatBot />
         </div>
 
         <div className="screen-overlay"></div>
         <div className="crt-effect"></div>
 
-        {/* Remove or comment out the Trigger Error button */}
-        {/* <button
-          onClick={triggerError}
-          style={{
-            position: "fixed",
-            bottom: 24,
-            right: 24,
-            zIndex: 3000,
-            background: "#ececec",
-            color: "#222",
-            border: "2px outset #bbb",
-            borderRadius: "4px",
-            padding: "6px 16px",
-            fontWeight: "bold",
-            fontSize: "0.95rem",
-            boxShadow: "2px 2px 4px rgba(0,0,0,0.12)",
-            cursor: "pointer",
-            fontFamily: "Tahoma, Geneva, sans-serif"
-          }}
-        >
-          Trigger Error
-        </button> */}
         {showError && <ErrorPopup message={errorMsg} onClose={() => setShowError(false)} />}
       </div>
     </div>

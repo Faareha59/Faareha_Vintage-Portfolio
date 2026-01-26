@@ -25,31 +25,6 @@ body {
   min-height: 100vh;
 }
 
-body.dark {
-  background-color: #1a202c;
-  color: #cbd5e0;
-}
-
-body.dark .desktop {
-  background-color: #2d3748;
-}
-
-body.dark .window {
-  background-color: #4a5568;
-  color: #edf2f7;
-}
-
-body.dark .window-title {
-  background-color: #2d3748;
-}
-
-body.dark .taskbar {
-  background-color: #2d3748;
-}
-
-body.dark .start-menu {
-  background-color: #2d3748;
-}
 
 .desktop {
   background-color: #0055aa;
@@ -124,34 +99,6 @@ body.dark .start-menu {
   border-color: #808080 #fff #fff #808080;
 }
 
-.start-menu {
-  background-color: #c0c0c0;
-  border: 2px solid;
-  border-color: #fff #808080 #808080 #fff;
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-  width: 200px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.start-menu-item {
-  padding: 8px 15px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.start-menu-item:hover {
-  background-color: #000080;
-  color: white;
-}
-
-.start-menu-item img {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-}
 
 .screen-overlay {
   position: absolute;

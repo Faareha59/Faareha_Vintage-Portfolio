@@ -12,7 +12,9 @@ const WindowsXPWindow = ({
   isMinimized = false,
   isMaximized: propIsMaximized = false,
   icon = '📺',
-  className = ''
+  className = '',
+  zIndex = 1,
+  onFocus
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState(defaultPosition);
@@ -29,6 +31,11 @@ const WindowsXPWindow = ({
       x: e.clientX - position.x,
       y: e.clientY - position.y
     });
+  };
+
+  const handleActivate = (e) => {
+    if (onFocus) onFocus();
+    handleMouseDown(e);
   };
 
   const handleMouseMove = (e) => {
@@ -78,6 +85,7 @@ const WindowsXPWindow = ({
     top: isMaximized ? '20px' : `${position.y}px`,
     width: isMaximized ? 'calc(100% - 40px)' : `${size.width}px`,
     height: isMaximized ? 'calc(100% - 80px)' : `${size.height}px`,
+    zIndex
   };
 
   return (
@@ -85,11 +93,15 @@ const WindowsXPWindow = ({
       ref={windowRef}
       className={`windows-xp-window ${isMaximized ? 'maximized' : ''} ${className}`}
       style={windowStyle}
-      onMouseDown={handleMouseDown}
+      onMouseDown={handleActivate}
     >
       <div className="window-title-bar">
         <div className="window-title">
-          <span className="window-icon" role="img" aria-hidden="true">{icon}</span>
+          {typeof icon === 'string' && (icon.startsWith('/') || icon.startsWith('http')) ? (
+            <img src={icon} alt="" className="window-icon-img" />
+          ) : (
+            <span className="window-icon" role="img" aria-hidden="true">{icon}</span>
+          )}
           {title}
         </div>
         <div className="window-controls">

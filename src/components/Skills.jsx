@@ -4,6 +4,7 @@ const skills = [
   { name: "MERN Stack", level: 78 },
   { name: "Mobile App Development", level: 80 },
   { name: "Python", level: 50 },
+  { name: "DevOps", level: 70 },
   { name: "Linux", level: 55 },
   { name: "JavaScript", level: 65 },
   { name: "Java", level: 70 },

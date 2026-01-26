@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 const savedAnswers = {
-  "What are Faareha's skills?": "Faareha is skilled in MERN Stack, Mobile App Development, Python, Linux, JavaScript, Java, HTML, and CSS.",
-  "Tell me about Faareha's education.": "Faareha is a 7th semester Computer Science student at Riphah International University.",
-  "What experience does Faareha have?": "Faareha has experience in web and mobile app development, AI projects, and more.",
+  "What are Faareha's skills?": "Faareha is skilled in MERN Stack, Mobile App Development, Python, DevOps, Linux, JavaScript, Java, HTML, and CSS.",
+  "Tell me about Faareha's education.": "Faareha is an 8th semester Computer Science student at Riphah International University.",
+  "What experience does Faareha have?": "Faareha has experience in web and mobile app development, AI projects, DevOps, and more.",
   "Show me Faareha's projects.": "You can view Faareha's projects in the Projects section of this portfolio.",
 };
 
