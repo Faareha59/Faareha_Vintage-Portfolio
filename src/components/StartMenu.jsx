@@ -9,10 +9,10 @@ function StartMenu({ icons, onItemClick, onShutdown }) {
   };
 
   const quickLinks = [
-    { id: 'documents', label: 'My Documents', fallbackIcon: '/icons/Documents-icon.png' },
-    { id: 'network', label: 'My Network Places', fallbackIcon: '/icons/Internet-icon.png' },
+    { id: 'projects', label: 'My Projects', fallbackIcon: '/icons/Projects-icon.png' },
     { id: 'resume', label: 'My Resume', fallbackIcon: '/icons/resume%20icon.png' },
-    { id: 'contact', label: 'Contact', fallbackIcon: '/icons/contacts-icon.png' },
+    { id: 'network', label: 'My Network Places', fallbackIcon: '/icons/Internet-icon.png' },
+    { id: 'documents', label: 'My Documents', fallbackIcon: '/icons/Documents-icon.png' },
   ];
 
   return (

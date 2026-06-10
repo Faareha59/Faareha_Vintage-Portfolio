@@ -6,7 +6,7 @@ const Taskbar = ({ onStartClick, openWindows, activeWindow, onWindowClick }) => 
   const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 30_000);
+    const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 

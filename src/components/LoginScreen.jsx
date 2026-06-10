@@ -22,15 +22,25 @@ function LoginScreen({ onLogin }) {
 
           <div className="panel-right">
             <button className="user-tile" onClick={() => onLogin({ username: 'Faareha' })}>
-              <div className="user-tile-frame">
-                <img
-                  src="./public/icons/Windows-Messenger-icon.png"
-                  alt="Faareha"
+          <div className="user-tile-frame">
+                <div
                   className="user-tile-avatar"
-                  onError={(e) => {
-                    e.currentTarget.src = 'https://win98icons.alexmeub.com/icons/png/user-4.png';
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '64px',
+                    height: '64px',
+                    backgroundColor: '#4A90E2',
+                    color: 'white',
+                    fontSize: '28px',
+                    fontWeight: 'bold',
+                    borderRadius: '4px',
+                    margin: 'auto'
                   }}
-                />
+                >
+                  FR
+                </div>
               </div>
               <span className="user-tile-name">Faareha</span>
             </button>

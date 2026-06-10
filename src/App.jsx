@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import DesktopIcon from './components/DesktopIcon';
 import Window from './components/Window';
@@ -14,6 +14,9 @@ import ErrorPopup from "./components/ErrorPopup";
 import ClippyChatBot from "./components/ClippyChatBot";
 import Skills from './components/Skills';
 import LoginScreen from './components/LoginScreen';
+import AboutMe from './components/AboutMe';
+import FileExplorer from './components/FileExplorer';
+import WindowsUpdateNotification from './components/WindowsUpdateNotification';
 import './App.css';
 
 function App() {
@@ -24,6 +27,26 @@ function App() {
   const [showError, setShowError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+
+  // Open About Me and Projects windows on first login
+  useEffect(() => {
+    if (isLoggedIn && openWindows.length === 0) {
+      setOpenWindows([
+        {
+          id: 'about_me',
+          title: 'About Me — Faareha Raza',
+          icon: '/icons/About-me-icon.png',
+          content: <AboutMe />,
+          width: 450,
+          height: 580
+        }
+      ]);
+      setActiveWindow('about_me');
+      // Show notification after a brief delay
+      setTimeout(() => setShowNotification(true), 1000);
+    }
+  }, [isLoggedIn]);
 
   const shutdownAudioUrl = 'https://archive.org/download/windows-xp-system-sounds/WINDOWS%20XP%20SHUTDOWN.wav';
   const startupAudioUrl = 'https://archive.org/download/windows-xp-system-sounds/WINDOWS%20XP%20STARTUP.wav';
@@ -131,31 +154,6 @@ function App() {
   }
 
   const systemIcons = [
-    {
-      id: 'about',
-      title: 'About Me',
-      icon: '/icons/About-me-icon.png',
-      content: (
-        <div className="p-4">
-          <h2 className="text-xl font-bold mb-4">About Me</h2>
-          <div>
-            <p className="mb-2">I'm a 8th Semester Computer Science student at Riphah International University.</p>
-            <p>
-              My latest projects include:
-              <ul className="list-disc pl-5">
-                <li>Fruit Fusion App – a modern fruit platform</li>
-                <li>Prime Deals – an e-commerce web app</li>
-                <li>Student Mental Health AI – an AI-powered platform supporting student mental health</li>
-                <li>Windows XP-themed portfolio</li>
-                <li>Game Arena</li>
-                <li>Note-Taking App – built with DevOps practices</li>
-              </ul>
-            </p>
-            <p>Always eager to learn and explore new technologies.</p>
-          </div>
-        </div>
-      )
-    },
     {
       id: 'my_computer',
       title: 'My Computer',
@@ -334,7 +332,7 @@ function App() {
     }
   ];
 
-  const desktopIconIds = ['about', 'my_computer', 'network', 'youtube', 'google', 'documents', 'user_account'];
+  const desktopIconIds = ['my_computer', 'network', 'youtube', 'google', 'documents', 'user_account'];
   const desktopIcons = systemIcons.filter((icon) => desktopIconIds.includes(icon.id));
 
   const portfolioIcons = [
@@ -346,29 +344,29 @@ function App() {
         <div className="p-4">
           <h2 className="text-xl font-bold mb-4">My Projects</h2>
           <div className="mb-4">
-            <h3 className="text-lg font-bold">1-Tic Tac Toe Game</h3>
-            <p className="mt-2">Tech Stack: C++</p>
-            <a href="https://www.linkedin.com/in/faareha-raza-08a0b1255/details/projects/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Linkedin Projects</a>
+            <h3 className="text-lg font-bold">1-LUMO AI – AI Tutor for Computer Science Students [FYP]</h3>
+            <p className="mt-2">Tech Stack: TypeScript, React, Tailwind, Node.js, MongoDB</p>
+            <a href="https://github.com/Faareha59/LumoAI" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-bold">2-Flight Reservation System</h3>
-            <p className="mt-2">Tech Stack: Object-Oriented Programming (OOP), Java</p>
-            <a href="https://www.linkedin.com/in/faareha-raza-08a0b1255/details/projects/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Linkedin Projects</a>
+            <h3 className="text-lg font-bold">2-Note-Taking App</h3>
+            <p className="mt-2">Tech Stack: DevOps, Modern Web Technologies</p>
+            <a href="https://github.com/Tooba-Baqai/Notes-Taking-App" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-bold">3-Social Media Marketing</h3>
-            <p className="mt-2">Tech Stack: Project Management</p>
-            <a href="https://www.linkedin.com/in/faareha-raza-08a0b1255/details/projects/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Linkedin Projects</a>
+            <h3 className="text-lg font-bold">3-Prime Deals</h3>
+            <p className="mt-2">Tech Stack: MongoDB, Express, React, Postman API, Tailwind CSS</p>
+            <a href="https://github.com/Faareha59/Prime-Deals/tree/ProjectTemplate/PrimeDeals-App" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-bold">4-Student Management System</h3>
-            <p className="mt-2">Tech Stack: Java, NetBeans</p>
-            <a href="https://www.linkedin.com/in/faareha-raza-08a0b1255/details/projects/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Linkedin Projects</a>
+            <h3 className="text-lg font-bold">4-Fruit Fusion</h3>
+            <p className="mt-2">Tech Stack: React Native, Expo Go, Firebase</p>
+            <a href="https://github.com/Faareha59/Fruit-Fusion" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-bold">5-Art and Heaven</h3>
-            <p className="mt-2">Tech Stack: HTML, CSS, JavaScript, PHP, XAMPP</p>
-            <a href="https://github.com/Faareha59/Art_and_Heaven" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
+            <h3 className="text-lg font-bold">5-Hope AI-Student Mental Health Predictor</h3>
+            <p className="mt-2">Tech Stack: Python,AI</p>
+            <a href="https://github.com/Faareha59/Game_Arena_OS" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
           <div className="mb-4">
             <h3 className="text-lg font-bold">6-Game Arena-Shell Scripting</h3>
@@ -376,24 +374,29 @@ function App() {
             <a href="https://github.com/Faareha59/Game_Arena_OS" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-bold">7-Hope AI-Student Mental Health Predictor</h3>
-            <p className="mt-2">Tech Stack: Python,AI</p>
-            <a href="https://github.com/Faareha59/Game_Arena_OS" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
+            <h3 className="text-lg font-bold">7-Art and Heaven</h3>
+            <p className="mt-2">Tech Stack: HTML, CSS, JavaScript, PHP, XAMPP</p>
+            <a href="https://github.com/Faareha59/Art_and_Heaven" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-bold">8-Fruit Fusion</h3>
-            <p className="mt-2">Tech Stack: React Native, Expo Go, Firebase</p>
-            <a href="https://github.com/Faareha59/Fruit-Fusion" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
+            <h3 className="text-lg font-bold">8-Student Management System</h3>
+            <p className="mt-2">Tech Stack: Java, NetBeans</p>
+            <a href="https://www.linkedin.com/in/faareha-raza-08a0b1255/details/projects/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Linkedin Projects</a>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-bold">10-Prime Deals</h3>
-            <p className="mt-2">Tech Stack: MongoDB, Express, React, Postman API, Tailwind CSS</p>
-            <a href="https://github.com/Faareha59/Prime-Deals/tree/ProjectTemplate/PrimeDeals-App" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo</a>
+            <h3 className="text-lg font-bold">9-Social Media Marketing</h3>
+            <p className="mt-2">Tech Stack: Project Management</p>
+            <a href="https://www.linkedin.com/in/faareha-raza-08a0b1255/details/projects/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Linkedin Projects</a>
           </div>
           <div className="mb-4">
-            <h3 className="text-lg font-bold">11-Note-Taking App</h3>
-            <p className="mt-2">Tech Stack: DevOps, Modern Web Technologies</p>
-            <a href="#" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">GitHub Repo (Coming Soon)</a>
+            <h3 className="text-lg font-bold">10-Flight Reservation System</h3>
+            <p className="mt-2">Tech Stack: Object-Oriented Programming (OOP), Java</p>
+            <a href="https://www.linkedin.com/in/faareha-raza-08a0b1255/details/projects/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Linkedin Projects</a>
+          </div>
+          <div className="mb-4">
+            <h3 className="text-lg font-bold">11-Tic Tac Toe Game</h3>
+            <p className="mt-2">Tech Stack: C++</p>
+            <a href="https://www.linkedin.com/in/faareha-raza-08a0b1255/details/projects/" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Linkedin Projects</a>
           </div>
         </div>
       )
@@ -481,6 +484,7 @@ function App() {
         <div className="crt-effect"></div>
 
         {showError && <ErrorPopup message={errorMsg} onClose={() => setShowError(false)} />}
+        {showNotification && <WindowsUpdateNotification onClose={() => setShowNotification(false)} />}
       </div>
     </div>
   );
